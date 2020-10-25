@@ -2,18 +2,48 @@ import * as ts from "typescript";
 import * as fs from "fs-extra";
 
 export const createDeclareAst = (identifier: string, literal: string) => [
-  ts.createVariableStatement(
+  ts.createModuleDeclaration(
     undefined,
-    ts.createVariableDeclarationList(
-      [
-        ts.createVariableDeclaration(
-          ts.createIdentifier(identifier),
-          ts.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-          ts.createStringLiteral(literal)
-        ),
-      ],
-      ts.NodeFlags.Const
-    )
+    undefined,
+    ts.createIdentifier("Foo"),
+    ts.createModuleDeclaration(
+      undefined,
+      undefined,
+      ts.createIdentifier("Bar"),
+      ts.createModuleDeclaration(
+        undefined,
+        undefined,
+        ts.createIdentifier("Baz"),
+        ts.createModuleBlock([
+          ts.createInterfaceDeclaration(
+            undefined,
+            undefined,
+            ts.createIdentifier("Hoge"),
+            undefined,
+            undefined,
+            [
+              ts.createPropertySignature(
+                undefined,
+                ts.createIdentifier("hoge"),
+                undefined,
+                ts.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+                undefined
+              ),
+              ts.createPropertySignature(
+                undefined,
+                ts.createIdentifier("foo"),
+                undefined,
+                ts.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
+                undefined
+              ),
+            ]
+          ),
+        ]),
+        ts.NodeFlags.NestedNamespace | ts.NodeFlags.Namespace
+      ),
+      ts.NodeFlags.NestedNamespace | ts.NodeFlags.Namespace
+    ),
+    ts.NodeFlags.Namespace
   ),
 ];
 const printer = ts.createPrinter();
